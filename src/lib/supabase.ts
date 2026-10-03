@@ -264,11 +264,37 @@ export async function uploadImageToSupabase(
       });
 
     if (uploadError) {
-      // Check if bucket doesn't exist
+      // Check if bucket doesn't exist - try auto-creating bucket
       if (uploadError.message?.includes("Bucket not found") || uploadError.message?.includes("bucket")) {
+        try {
+          const { error: createErr } = await supabase.storage.createBucket(STORAGE_BUCKET_NAME, {
+            public: true,
+          });
+          if (!createErr) {
+            // Retry upload once
+            const { data: retryData, error: retryError } = await supabase.storage
+              .from(STORAGE_BUCKET_NAME)
+              .upload(path, file, {
+                cacheControl: "3600",
+                upsert: true,
+                contentType: file.type || "image/jpeg",
+              });
+            if (!retryError && retryData) {
+              const { data: urlData } = supabase.storage
+                .from(STORAGE_BUCKET_NAME)
+                .getPublicUrl(retryData.path);
+              if (urlData?.publicUrl) {
+                return { success: true, url: urlData.publicUrl };
+              }
+            }
+          }
+        } catch {
+          // ignore fallback failure and show message
+        }
+
         return {
           success: false,
-          error: `Storage bucket '${STORAGE_BUCKET_NAME}' was not found in your Supabase project. Please run the provided SQL setup script in your Supabase SQL Editor.`,
+          error: `Storage bucket '${STORAGE_BUCKET_NAME}' needs to be created in Supabase. Please run the SQL setup script or create a public bucket named 'gokulam-media' in your Supabase Dashboard.`,
         };
       }
       return { success: false, error: uploadError.message };
