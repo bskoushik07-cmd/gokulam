@@ -94,8 +94,9 @@ export default function Footer() {
             <ul className="mt-5 space-y-3.5 text-sm font-body">
               {[
                 ["/our-story", "Our Story"],
-                ["/menu", "Full Menu"],
-                ["/menu#dosas", "Gokulam Classics"],
+                ["/menu", "All Menus"],
+                ["/menu/janpath", "Menu – Janpath (Delhi)"],
+                ["/menu/sector-62", "Menu – Sector 62 (Noida)"],
                 ["/experiences", "Experiences"],
                 ["/outlets", "Find an Outlet"],
                 ["/contact", "Contact Us"],
@@ -119,12 +120,12 @@ export default function Footer() {
             </h3>
             <ul className="mt-5 space-y-3.5 text-sm font-body">
               {[
-                ["/menu#breakfast", "Breakfast Rituals"],
-                ["/menu#dosas", "Crispy Dosas"],
-                ["/menu#idlis-vadas", "Idlis & Vadas"],
-                ["/menu#thalis", "Gokulam Thali"],
-                ["/menu#beverages", "Filter Coffee"],
-                ["/menu#desserts", "Payasam & Sweets"],
+                ["/menu/janpath#breakfast", "Breakfast Rituals"],
+                ["/menu/janpath#dosas", "Crispy Dosas"],
+                ["/menu/janpath#idlis-vadas", "Idlis & Vadas"],
+                ["/menu/janpath#thalis", "Gokulam Thali"],
+                ["/menu/janpath#beverages", "Filter Coffee"],
+                ["/menu/janpath#desserts", "Payasam & Sweets"],
               ].map(([href, label]) => (
                 <li key={href}>
                   <Link
@@ -197,8 +198,19 @@ export default function Footer() {
         </div>
 
         {/* Bottom copyright & Back to top */}
-        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-cream/15 pt-8 text-xs text-cream/50 sm:flex-row">
-          <p>© {new Date().getFullYear()} Gokulam. All rights reserved.</p>
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-cream/15 pt-8 text-xs text-cream/50 sm:flex-row sm:flex-wrap">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+            <p>© {new Date().getFullYear()} Gokulam. All rights reserved.</p>
+            <span className="hidden sm:inline text-cream/30">•</span>
+            <a
+              href="https://liitmedia.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cream/70 transition-colors hover:text-copper hover:underline underline-offset-4"
+            >
+              Designed and Managed by liitmedia.in
+            </a>
+          </div>
           
           <p className="font-display tracking-widest text-cream/70 flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5 text-copper" />

@@ -11,19 +11,27 @@
 
 @theme {
   /* Warm paper neutrals */
-  --color-cream: #f7f2e6; /* page background */
-  --color-parchment: #efe6d1; /* cards / raised surfaces */
-  --color-sand: #ddcda9; /* borders, dividers */
+  --color-cream: #f7f2e6;
+  /* page background */
+  --color-parchment: #efe6d1;
+  /* cards / raised surfaces */
+  --color-sand: #ddcda9;
+  /* borders, dividers */
 
   /* Ink & earth */
-  --color-ink: #2d2318; /* primary text */
-  --color-ink-soft: #5c4f3e; /* secondary text */
-  --color-bark: #38302a; /* footer container (dark brown) */
+  --color-ink: #2d2318;
+  /* primary text */
+  --color-ink-soft: #5c4f3e;
+  /* secondary text */
+  --color-bark: #38302a;
+  /* footer container (dark brown) */
 
   /* Brand accents (placeholder) */
-  --color-forest: #1e3d31; /* deep green — logo plate, dark sections */
+  --color-forest: #1e3d31;
+  /* deep green — logo plate, dark sections */
   --color-forest-deep: #122a21;
-  --color-copper: #b26f3b; /* scroll-route line, highlights */
+  --color-copper: #b26f3b;
+  /* scroll-route line, highlights */
   --color-copper-deep: #8a5327;
 
   /* Premium editorial type system */
@@ -32,11 +40,13 @@
 }
 
 html {
-  scroll-behavior: auto; /* Lenis owns smooth scrolling */
+  scroll-behavior: auto;
+  /* Lenis owns smooth scrolling */
 }
 
 body {
-  color-scheme: light; /* never let the browser auto-darken controls in dark mode */
+  color-scheme: light;
+  /* never let the browser auto-darken controls in dark mode */
   background-color: var(--color-cream);
   /* Light paper texture — generated placeholder, replace with brand kit asset */
   /* cream veil on top keeps the texture very faint; lower the alpha (0.7) to show more */
@@ -64,13 +74,46 @@ body {
 ::-webkit-scrollbar {
   width: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--color-cream);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-sand);
   border-radius: 8px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-copper);
+}
+
+/* ------------------------------------------------------------------
+ * INSTAGRAM REELS CONTINUOUS MARQUEE ANIMATION
+ * ------------------------------------------------------------------ */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-reels-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 42s linear infinite;
+}
+
+.animate-reels-marquee:hover {
+  animation-play-state: paused;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

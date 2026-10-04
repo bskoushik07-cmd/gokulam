@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { ImageItem } from "@/lib/image-registry";
 import { uploadImageToSupabase, getSupabaseCredentials } from "@/lib/supabase";
+import { compressImageFile } from "@/lib/image-compressor";
 
 interface ImageEditModalProps {
   item: ImageItem | null;
@@ -38,6 +39,7 @@ export default function ImageEditModal({
   const [inputUrl, setInputUrl] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [originalSizeKB, setOriginalSizeKB] = useState<number | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -49,6 +51,7 @@ export default function ImageEditModal({
       setInputUrl(currentUrl);
       setPreviewUrl(currentUrl);
       setSelectedFile(null);
+      setOriginalSizeKB(null);
       setFilePreview(null);
       setErrorMsg("");
       setSuccessMsg("");
@@ -59,14 +62,35 @@ export default function ImageEditModal({
 
   const hasCreds = !!getSupabaseCredentials();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const objUrl = URL.createObjectURL(file);
+  const processSelectedFile = async (rawFile: File) => {
+    try {
+      const origKB = rawFile.size / 1024;
+      setOriginalSizeKB(origKB);
+
+      // Auto-compress heavy images to web standards
+      const optimized = await compressImageFile(rawFile, {
+        maxWidth: 2048,
+        maxHeight: 2048,
+        quality: 0.88,
+      });
+
+      setSelectedFile(optimized);
+      const objUrl = URL.createObjectURL(optimized);
       setFilePreview(objUrl);
       setPreviewUrl(objUrl);
       setErrorMsg("");
+    } catch {
+      setSelectedFile(rawFile);
+      const objUrl = URL.createObjectURL(rawFile);
+      setFilePreview(objUrl);
+      setPreviewUrl(objUrl);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processSelectedFile(file);
     }
   };
 
@@ -74,11 +98,7 @@ export default function ImageEditModal({
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith("image/")) {
-      setSelectedFile(file);
-      const objUrl = URL.createObjectURL(file);
-      setFilePreview(objUrl);
-      setPreviewUrl(objUrl);
-      setErrorMsg("");
+      processSelectedFile(file);
     }
   };
 
@@ -86,6 +106,7 @@ export default function ImageEditModal({
     setInputUrl(val);
     setPreviewUrl(val);
     setSelectedFile(null);
+    setOriginalSizeKB(null);
     setFilePreview(null);
     setErrorMsg("");
   };
@@ -109,7 +130,9 @@ export default function ImageEditModal({
         }
 
         setIsUploading(true);
-        const uploadRes = await uploadImageToSupabase(selectedFile);
+        // Ensure compressed before upload
+        const fileToUpload = await compressImageFile(selectedFile);
+        const uploadRes = await uploadImageToSupabase(fileToUpload);
         setIsUploading(false);
 
         if (!uploadRes.success || !uploadRes.url) {
@@ -246,9 +269,16 @@ export default function ImageEditModal({
                   Supports WebP, JPG, PNG, SVG (Recommended: {item.recommendedSize})
                 </p>
                 {selectedFile && (
-                  <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
-                    <Check className="h-3.5 w-3.5" /> File Selected: {(selectedFile.size / 1024).toFixed(1)} KB
-                  </span>
+                  <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
+                      <Check className="h-3.5 w-3.5" /> File Selected: {(selectedFile.size / 1024).toFixed(1)} KB
+                    </span>
+                    {originalSizeKB && originalSizeKB > 1024 && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-sand/60 px-3 py-1 text-[11px] font-medium text-ink-soft">
+                        ✨ Auto-optimized from {(originalSizeKB / 1024).toFixed(1)} MB
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
               {!hasCreds && (

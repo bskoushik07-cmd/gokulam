@@ -14,6 +14,7 @@ import {
   uploadImageToSupabase,
   getSupabaseCredentials,
 } from "@/lib/supabase";
+import { compressImageFile } from "@/lib/image-compressor";
 import { IMAGE_REGISTRY } from "@/lib/image-registry";
 
 interface MediaLibraryModalProps {
@@ -63,14 +64,25 @@ export default function MediaLibraryModal({
     setIsUploading(true);
     setUploadError("");
 
-    const res = await uploadImageToSupabase(file);
-    setIsUploading(false);
+    try {
+      const optimized = await compressImageFile(file, {
+        maxWidth: 2048,
+        maxHeight: 2048,
+        quality: 0.88,
+      });
 
-    if (res.success && res.url) {
-      onSelectImage(res.url);
-      onClose();
-    } else {
-      setUploadError(res.error || "Failed to upload file to Supabase storage.");
+      const res = await uploadImageToSupabase(optimized);
+      setIsUploading(false);
+
+      if (res.success && res.url) {
+        onSelectImage(res.url);
+        onClose();
+      } else {
+        setUploadError(res.error || "Failed to upload file to Supabase storage.");
+      }
+    } catch (err: any) {
+      setIsUploading(false);
+      setUploadError(err.message || "Upload failed.");
     }
   };
 

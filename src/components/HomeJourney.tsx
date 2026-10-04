@@ -17,8 +17,8 @@ import {
   SignatureDishCard,
   OutletCard,
   ExperienceCard,
-  SocialGrid,
 } from "@/components/cards";
+import InstagramReelsMarquee from "@/components/InstagramReelsMarquee";
 import {
   menuCategories,
   signatureDishes,
@@ -75,14 +75,14 @@ export default function HomeJourney() {
         <section className="relative overflow-hidden px-4 pt-6 pb-16 sm:px-6 sm:pt-10 sm:pb-24 lg:pt-12 lg:pb-28">
           {/* Mysore Palace line-art — journey start, like the client reference */}
           <MysorePalace className="pointer-events-none absolute left-4 sm:left-10 top-0 w-[32rem] opacity-[0.25] sm:w-[50rem] sm:opacity-[0.32] lg:w-[58rem]" />
-          
+
           <div className="relative z-10 mx-auto grid max-w-7xl items-start gap-10 lg:grid-cols-2 lg:gap-14">
             <Reveal>
               <h1 className="font-display text-5xl font-semibold leading-[1.04] text-ink sm:text-6xl lg:text-7xl xl:text-[5rem]">
                 The soul of South India,{" "}
                 <span className="italic text-copper-deep">on your plate.</span>
               </h1>
-              
+
               <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg lg:text-xl max-w-xl">
                 Authentic flavours, timeless recipes and the warmth of a meal made with heart. Freshly ground batters, slow-brewed filter coffee, and classics crisped to order.
               </p>
@@ -309,33 +309,35 @@ export default function HomeJourney() {
           </div>
         </Section>
 
-        {/* ============ 10 — COMMUNITY / SOCIAL ============ */}
-        <Section>
-          <div className="mx-auto max-w-2xl text-center">
-            <Reveal>
-              <Eyebrow>Beyond the Table</Eyebrow>
-              <h2 className="mt-4 font-display text-4xl font-semibold leading-tight text-ink sm:text-5xl">
-                Gokulam, beyond the table.
-              </h2>
-              <p className="mt-4 text-ink-soft">
-                Follow along for new dishes, stories from our kitchens, special
-                menus and everything happening across Gokulam.
-              </p>
-              <div className="mt-6">
-                <CTAButton
-                  href="https://instagram.com"
-                  variant="secondary"
-                >
-                  Follow Us on Instagram
-                </CTAButton>
-              </div>
-            </Reveal>
+        {/* ============ 10 — COMMUNITY / INSTAGRAM REELS ============ */}
+        <section className="relative px-0 py-12 sm:py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="mx-auto max-w-2xl text-center">
+              <Reveal>
+                <Eyebrow>Beyond the Table</Eyebrow>
+                <h2 className="mt-4 font-display text-4xl font-semibold leading-tight text-ink sm:text-5xl">
+                  Gokulam, beyond the table.
+                </h2>
+                <p className="mt-4 text-ink-soft">
+                  Follow along for new dishes, stories from our kitchens, special
+                  menus and everything happening across Gokulam.
+                </p>
+                <div className="mt-6">
+                  <CTAButton
+                    href="https://instagram.com"
+                    variant="secondary"
+                  >
+                    Follow Us on Instagram
+                  </CTAButton>
+                </div>
+              </Reveal>
+            </div>
           </div>
 
-          <div className="mt-12">
-            <SocialGrid />
+          <div className="mt-10">
+            <InstagramReelsMarquee />
           </div>
-        </Section>
+        </section>
 
         {/* ============ 11 — FINAL CTA WITH INDIA GATE ============ */}
         <section className="relative px-4 pt-10 pb-0 sm:px-6 sm:pt-16 lg:pt-20">

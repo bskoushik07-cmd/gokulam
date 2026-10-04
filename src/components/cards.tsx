@@ -12,19 +12,36 @@ import { FoodImage, Reveal } from "./ui";
 import { useSiteImage } from "@/context/ImageContext";
 
 /* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
 /* Tag pill labels                                                     */
 /* ------------------------------------------------------------------ */
 const TAG_LABELS: Record<string, string> = {
-  spicy: "Spicy",
-  jain: "Jain",
-  signature: "Signature",
+  spicy: "Spicy 🌶",
+  jain: "Jain Option",
+  signature: "Signature ★",
   seasonal: "Seasonal",
   "chef-special": "Chef's Special",
+  "must-try": "Must Try 🔥",
+  combo: "Value Combo",
 };
 
 export function TagPill({ tag }: { tag: string }) {
+  const isSpecial = tag === "signature" || tag === "must-try" || tag === "chef-special";
+  const isJain = tag === "jain";
+  const isSpicy = tag === "spicy";
+
   return (
-    <span className="rounded-full bg-copper/15 px-2.5 py-0.5 text-xs font-medium text-copper-deep">
+    <span
+      className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide ${
+        isSpecial
+          ? "bg-copper/20 text-copper-deep border border-copper/30"
+          : isJain
+          ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+          : isSpicy
+          ? "bg-amber-100 text-amber-900 border border-amber-200"
+          : "bg-sand/60 text-ink-soft"
+      }`}
+    >
       {TAG_LABELS[tag] ?? tag}
     </span>
   );
@@ -37,32 +54,55 @@ export function MenuCategoryBlock({ category }: { category: MenuCategory }) {
   return (
     <div id={category.slug} className="scroll-mt-28">
       <Reveal>
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
+        <div className="flex flex-col gap-2 border-b border-copper/30 pb-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink">
               {category.title}
             </h2>
-            <p className="mt-2 text-ink-soft">{category.description}</p>
+            <span className="text-xs font-semibold uppercase tracking-wider text-copper-deep bg-copper/10 px-3 py-1 rounded-full">
+              {category.items.length} {category.items.length === 1 ? "dish" : "dishes"}
+            </span>
           </div>
+          {category.description && (
+            <p className="text-sm text-ink-soft">{category.description}</p>
+          )}
         </div>
       </Reveal>
-      <ul className="mt-8 grid gap-x-10 gap-y-7 md:grid-cols-2">
+      <ul className="mt-6 grid gap-x-10 gap-y-6 md:grid-cols-2">
         {category.items.map((item, i) => (
-          <Reveal key={item.name} delay={Math.min(i * 0.05, 0.2)}>
-            <li className="border-b border-sand/70 pb-6">
-              <div className="flex items-baseline justify-between gap-4">
-                <h3 className="font-display text-lg font-semibold text-ink">
-                  {item.name}
-                </h3>
-                <span className="shrink-0 font-display text-lg font-semibold text-copper-deep">
-                  ₹{item.price}
-                </span>
+          <Reveal key={item.id || item.name} delay={Math.min(i * 0.03, 0.2)}>
+            <li className="group rounded-2xl border border-sand/60 bg-white/70 p-5 shadow-sm transition-all hover:border-copper/50 hover:bg-white hover:shadow-md">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-display text-lg font-bold text-ink group-hover:text-forest">
+                      {item.name}
+                    </h3>
+                    {item.servingDetails && (
+                      <span className="rounded-full bg-forest/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-forest border border-forest/20">
+                        {item.servingDetails}
+                      </span>
+                    )}
+                  </div>
+                  {item.description && (
+                    <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-ink-soft">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+                <div className="shrink-0 text-right">
+                  <span className="font-display text-lg font-bold text-copper-deep">
+                    ₹{item.price}
+                  </span>
+                  {item.isAvailable === false && (
+                    <span className="block text-[10px] font-bold text-rose-600 uppercase">
+                      Sold Out
+                    </span>
+                  )}
+                </div>
               </div>
-              <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-                {item.description}
-              </p>
-              {item.tags.length > 0 && (
-                <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {item.tags && item.tags.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5 pt-2 border-t border-sand/40">
                   {item.tags.map((t) => (
                     <TagPill key={t} tag={t} />
                   ))}
@@ -227,46 +267,3 @@ export function ExperienceCard({ experience }: { experience: Experience }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* SocialGrid — dynamic tiles connected to CMS                        */
-/* ------------------------------------------------------------------ */
-export function SocialGrid() {
-  const tile1 = useSiteImage("social.tile_1", "/images/hero-dosa.webp");
-  const tile2 = useSiteImage("social.tile_2", "/images/sig-thali.webp");
-  const tile3 = useSiteImage("social.tile_3", "/images/coffee-pour.webp");
-  const tile4 = useSiteImage("social.tile_4", "/images/sig-idli.jpg");
-  const tile5 = useSiteImage("social.tile_5", "/images/sig-vada.jpg");
-  const tile6 = useSiteImage("social.tile_6", "/images/sig-filter-coffee.webp");
-
-  const tiles = [
-    { src: tile1, alt: "Crispy dosa on a banana leaf" },
-    { src: tile2, alt: "South Indian thali" },
-    { src: tile3, alt: "Filter coffee being poured" },
-    { src: tile4, alt: "Soft idlis with sambar" },
-    { src: tile5, alt: "Crisp medu vadas" },
-    { src: tile6, alt: "Filter coffee in davara and tumbler" },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-      {tiles.map((tile, i) => (
-        <Reveal key={tile.src + i} delay={Math.min(i * 0.06, 0.24)}>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Gokulam on Instagram — ${tile.alt}`}
-            className="block"
-          >
-            <FoodImage
-              src={tile.src}
-              alt={tile.alt}
-              className="aspect-square"
-              sizes="(max-width: 768px) 50vw, 33vw"
-            />
-          </a>
-        </Reveal>
-      ))}
-    </div>
-  );
-}

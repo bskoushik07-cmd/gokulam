@@ -40,12 +40,12 @@ VALUES (
     'gokulam-media',
     'gokulam-media',
     true,
-    10485760, -- 10MB limit
+    52428800, -- 50MB limit
     ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml', 'image/gif']
 )
 ON CONFLICT (id) DO UPDATE SET
     public = true,
-    file_size_limit = 10485760;
+    file_size_limit = 52428800;
 
 -- 5. Storage RLS Policies (Allow public view and upload to gokulam-media)
 DROP POLICY IF EXISTS "Public Access gokulam-media" ON storage.objects;
@@ -69,6 +69,80 @@ CREATE POLICY "Public Delete gokulam-media"
     ON storage.objects FOR DELETE
     USING (bucket_id = 'gokulam-media');
 
+-- 6. Create table for Instagram Reels
+CREATE TABLE IF NOT EXISTS public.site_reels (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    caption TEXT NOT NULL,
+    thumbnail TEXT NOT NULL,
+    video_url TEXT,
+    instagram_url TEXT NOT NULL DEFAULT 'https://instagram.com',
+    handle TEXT NOT NULL DEFAULT '@gokulam.official',
+    likes TEXT NOT NULL DEFAULT '2.4k',
+    "order" INT DEFAULT 1,
+    updated_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- Enable Row Level Security for site_reels
+ALTER TABLE public.site_reels ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can view site reels" ON public.site_reels;
+DROP POLICY IF EXISTS "Anyone can insert or update site reels" ON public.site_reels;
+DROP POLICY IF EXISTS "Anyone can delete site reels" ON public.site_reels;
+
+CREATE POLICY "Public can view site reels"
+    ON public.site_reels FOR SELECT USING (true);
+
+CREATE POLICY "Anyone can insert or update site reels"
+    ON public.site_reels FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Anyone can delete site reels"
+    ON public.site_reels FOR DELETE USING (true);
+
+-- Seed initial reels if table is empty
+INSERT INTO public.site_reels (id, title, caption, thumbnail, instagram_url, handle, likes, "order")
+VALUES
+    ('reel-1', 'Golden Ghee Roast Dosa', 'Golden, crisp and drenched in pure ghee. Made fresh on sizzling cast iron tawas every single morning.', '/images/hero-dosa.webp', 'https://instagram.com', '@gokulam.official', '2.8k', 1),
+    ('reel-2', 'The 3-Foot Coffee Pour', 'The froth, the aroma, and the traditional brass tumbler & davara ritual. The only way to start your morning.', '/images/sig-filter-coffee.webp', 'https://instagram.com', '@gokulam.official', '4.5k', 2),
+    ('reel-3', 'Grand South Indian Feast', 'Over 20 authentic heritage delicacies served on fresh banana leaf. Come hungry, leave with a full heart.', '/images/sig-thali.webp', 'https://instagram.com', '@gokulam.official', '3.2k', 3),
+    ('reel-4', 'Steaming Ghee Podi Idli', 'Steaming hot mallipoo idlis generously tossed in homemade roasted gun powder podi and pure melted ghee.', '/images/sig-idli.jpg', 'https://instagram.com', '@gokulam.official', '1.9k', 4),
+    ('reel-5', 'Crispy Golden Medu Vada', 'Crunchy on the outside, cloud-soft inside. Paired with fresh coconut chutney and piping hot sambar.', '/images/sig-vada.jpg', 'https://instagram.com', '@gokulam.official', '2.4k', 5),
+    ('reel-6', 'Fresh Morning Brewing', 'Slow-brewed plantation coffee beans creating the iconic aromatic dark decoction since dawn.', '/images/coffee-pour.webp', 'https://instagram.com', '@gokulam.official', '3.6k', 6)
+ON CONFLICT (id) DO NOTHING;
+
+-- 7. Create table for Menu Items CMS
+CREATE TABLE IF NOT EXISTS public.menu_items (
+    id TEXT PRIMARY KEY,
+    outlet TEXT NOT NULL DEFAULT 'janpath', -- 'janpath', 'sector-62', 'all'
+    category_id TEXT NOT NULL,
+    category_title TEXT NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT DEFAULT '',
+    serving_details TEXT DEFAULT '',
+    price NUMERIC NOT NULL,
+    tags TEXT[] DEFAULT '{}',
+    is_available BOOLEAN DEFAULT true,
+    "order" INT DEFAULT 1,
+    image_url TEXT DEFAULT '',
+    updated_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- Enable Row Level Security for menu_items
+ALTER TABLE public.menu_items ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can view menu items" ON public.menu_items;
+DROP POLICY IF EXISTS "Anyone can insert or update menu items" ON public.menu_items;
+DROP POLICY IF EXISTS "Anyone can delete menu items" ON public.menu_items;
+
+CREATE POLICY "Public can view menu items"
+    ON public.menu_items FOR SELECT USING (true);
+
+CREATE POLICY "Anyone can insert or update menu items"
+    ON public.menu_items FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Anyone can delete menu items"
+    ON public.menu_items FOR DELETE USING (true);
+
 -- ==============================================================================
--- DONE! Your Supabase database is now ready for the Gokulam Admin CMS.
+-- DONE! Your Supabase database is now ready for Gokulam Images, Reels & Menu CMS.
 -- ==============================================================================

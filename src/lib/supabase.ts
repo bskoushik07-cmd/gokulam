@@ -8,8 +8,8 @@ export interface SupabaseConfig {
 const LOCAL_STORAGE_SUPABASE_KEY = "gokulam_supabase_config";
 const STORAGE_BUCKET_NAME = "gokulam-media";
 
-const DEFAULT_SUPABASE_URL = "https://gezalmnbkbbinrisjhqg.supabase.co";
-const DEFAULT_SUPABASE_KEY = "sb_publishable_JcFXCtbgO5m_HM9_Wq4iOA_U_65dx69";
+const DEFAULT_SUPABASE_URL = "https://mxefadvviavrukzorigf.supabase.co";
+const DEFAULT_SUPABASE_KEY = "sb_publishable_eXICuIy1-YJoYAK3CpY0Qg_icr55ECV";
 
 /**
  * Retrieves configured Supabase credentials from env or local storage or defaults
@@ -350,3 +350,270 @@ export async function listSupabaseMedia(): Promise<{ name: string; url: string; 
     return [];
   }
 }
+
+export interface SiteReelRecord {
+  id: string;
+  title: string;
+  caption: string;
+  thumbnail: string;
+  video_url?: string | null;
+  instagram_url: string;
+  handle: string;
+  likes: string;
+  order: number;
+  updated_at?: string;
+}
+
+/**
+ * Fetch all Instagram reels from Supabase
+ */
+export async function fetchSiteReels(): Promise<SiteReelRecord[] | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from("site_reels")
+      .select("*")
+      .order("order", { ascending: true });
+
+    if (error) {
+      console.warn("Supabase fetch reels warning:", error.message);
+      return null;
+    }
+
+    return (data as SiteReelRecord[]) || [];
+  } catch (err) {
+    console.warn("Error fetching site reels from Supabase:", err);
+    return null;
+  }
+}
+
+/**
+ * Save single or multiple reels to Supabase
+ */
+export async function saveSiteReels(
+  reels: any[] | any
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = getSupabase();
+  if (!supabase) {
+    return { success: false, error: "Supabase is not configured." };
+  }
+
+  try {
+    const list = Array.isArray(reels) ? reels : [reels];
+    const records = list.map((item, index) => ({
+      id: item.id,
+      title: item.title,
+      caption: item.caption,
+      thumbnail: item.thumbnail,
+      video_url: item.videoUrl || item.video_url || null,
+      instagram_url: item.instagramUrl || item.instagram_url || "https://instagram.com",
+      handle: item.handle || "@gokulam.official",
+      likes: item.likes || "2.4k",
+      order: typeof item.order === "number" ? item.order : index + 1,
+      updated_at: new Date().toISOString(),
+    }));
+
+    const { error } = await supabase
+      .from("site_reels")
+      .upsert(records, { onConflict: "id" });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to save reels." };
+  }
+}
+
+/**
+ * Save a single reel to Supabase
+ */
+export async function saveSiteReel(
+  reel: any
+): Promise<{ success: boolean; error?: string }> {
+  return saveSiteReels(reel);
+}
+
+/**
+ * Delete a reel by ID from Supabase
+ */
+export async function deleteSiteReel(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = getSupabase();
+  if (!supabase) {
+    return { success: false, error: "Supabase is not configured." };
+  }
+
+  try {
+    const { error } = await supabase.from("site_reels").delete().eq("id", id);
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to delete reel." };
+  }
+}
+
+export interface MenuItemRecord {
+  id: string;
+  outlet: string;
+  category_id: string;
+  category_title: string;
+  name: string;
+  description: string;
+  serving_details?: string;
+  price: number;
+  tags: string[];
+  is_available: boolean;
+  order?: number;
+  image_url?: string;
+  updated_at?: string;
+}
+
+/**
+ * Fetch all menu items from Supabase (optionally filtered by outlet)
+ */
+export async function fetchMenuItems(outlet?: string): Promise<MenuItemRecord[] | null> {
+  const supabase = getSupabase();
+  if (!supabase) return null;
+
+  try {
+    let query = supabase.from("menu_items").select("*").order("order", { ascending: true });
+    if (outlet && outlet !== "all") {
+      query = query.eq("outlet", outlet);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.warn("Supabase fetch menu items warning:", error.message);
+      return null;
+    }
+
+    return (data as MenuItemRecord[]) || [];
+  } catch (err) {
+    console.warn("Error fetching menu items from Supabase:", err);
+    return null;
+  }
+}
+
+/**
+ * Save single menu item to Supabase
+ */
+export async function saveMenuItem(
+  item: Partial<MenuItemRecord> & { id: string; name: string; price: number; category_id: string; category_title: string }
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = getSupabase();
+  if (!supabase) {
+    return { success: false, error: "Supabase is not configured." };
+  }
+
+  try {
+    const record: MenuItemRecord = {
+      id: item.id,
+      outlet: item.outlet || "janpath",
+      category_id: item.category_id,
+      category_title: item.category_title,
+      name: item.name,
+      description: item.description || "",
+      serving_details: item.serving_details || "",
+      price: Number(item.price),
+      tags: item.tags || [],
+      is_available: item.is_available !== false,
+      order: typeof item.order === "number" ? item.order : 1,
+      image_url: item.image_url || "",
+      updated_at: new Date().toISOString(),
+    };
+
+    const { error } = await supabase
+      .from("menu_items")
+      .upsert(record, { onConflict: "id" });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to save menu item." };
+  }
+}
+
+/**
+ * Bulk save menu items (e.g. for initial seed or sync)
+ */
+export async function bulkSaveMenuItems(
+  items: MenuItemRecord[]
+): Promise<{ success: boolean; count: number; error?: string }> {
+  const supabase = getSupabase();
+  if (!supabase) {
+    return { success: false, count: 0, error: "Supabase is not configured." };
+  }
+
+  try {
+    const formatted = items.map((item, index) => ({
+      id: item.id,
+      outlet: item.outlet || "janpath",
+      category_id: item.category_id,
+      category_title: item.category_title,
+      name: item.name,
+      description: item.description || "",
+      serving_details: item.serving_details || "",
+      price: Number(item.price),
+      tags: item.tags || [],
+      is_available: item.is_available !== false,
+      order: typeof item.order === "number" ? item.order : index + 1,
+      image_url: item.image_url || "",
+      updated_at: new Date().toISOString(),
+    }));
+
+    // Batch in chunks of 50 for optimal network performance and safety
+    const chunkSize = 50;
+    let totalSaved = 0;
+    for (let i = 0; i < formatted.length; i += chunkSize) {
+      const chunk = formatted.slice(i, i + chunkSize);
+      const { error } = await supabase
+        .from("menu_items")
+        .upsert(chunk, { onConflict: "id" });
+
+      if (error) {
+        return { success: false, count: totalSaved, error: error.message };
+      }
+      totalSaved += chunk.length;
+    }
+
+    return { success: true, count: totalSaved };
+  } catch (err: any) {
+    return { success: false, count: 0, error: err.message || "Failed to bulk save items." };
+  }
+}
+
+/**
+ * Delete a menu item by ID from Supabase
+ */
+export async function deleteMenuItem(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = getSupabase();
+  if (!supabase) {
+    return { success: false, error: "Supabase is not configured." };
+  }
+
+  try {
+    const { error } = await supabase.from("menu_items").delete().eq("id", id);
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to delete menu item." };
+  }
+}
+
+

@@ -1,10 +1,19 @@
 import type { MetadataRoute } from "next";
 import { outlets } from "@/content";
 
-/** SEO sitemap — static routes + every outlet detail page. */
+/** SEO sitemap — static routes + outlet detail pages + menu pages. */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://gokulam.in";
-  const staticRoutes = ["", "/our-story", "/menu", "/experiences", "/outlets", "/contact"];
+  const staticRoutes = [
+    "",
+    "/our-story",
+    "/menu",
+    "/menu/janpath",
+    "/menu/sector-62",
+    "/experiences",
+    "/outlets",
+    "/contact",
+  ];
 
   return [
     ...staticRoutes.map((route) => ({

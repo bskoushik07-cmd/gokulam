@@ -29,7 +29,7 @@ export const outlets: Outlet[] = [
     city: "Noida",
     area: "Sector 62",
     address: "Sector 62, Noida Electronic City",
-    hours: null,
+    hours: "8:00 AM – 8:00 PM, all days",
     phone: null,
     mapsUrl: "https://maps.app.goo.gl/aD32b2w53EhvrV2g8",
     orderOnlineUrl: null,

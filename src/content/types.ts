@@ -30,14 +30,21 @@ export interface Outlet {
   image: string | null;
 }
 
-export type MenuTag = "spicy" | "jain" | "signature" | "seasonal" | "chef-special";
+export type MenuTag = "spicy" | "jain" | "signature" | "seasonal" | "chef-special" | "must-try" | "combo";
 
 export interface MenuItem {
+  id?: string;
   name: string;
   description: string;
   /** Price in INR */
   price: number;
   tags: MenuTag[];
+  servingDetails?: string;
+  isAvailable?: boolean;
+  order?: number;
+  categoryId?: string;
+  categoryTitle?: string;
+  outlet?: string;
 }
 
 export interface MenuCategory {

@@ -5,6 +5,8 @@ import SmoothScroll from "@/components/SmoothScroll";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ImageProvider } from "@/context/ImageContext";
+import { ReelsProvider } from "@/context/ReelsContext";
+import { MenuProvider } from "@/context/MenuContext";
 
 /* Premium editorial type pairing — Playfair Display + Libre Franklin */
 const playfair = Playfair_Display({
@@ -48,11 +50,15 @@ export default function RootLayout({
     >
       <body className="font-body min-h-screen flex flex-col bg-cream text-ink">
         <ImageProvider>
-          <SmoothScroll>
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </SmoothScroll>
+          <ReelsProvider>
+            <MenuProvider>
+              <SmoothScroll>
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </SmoothScroll>
+            </MenuProvider>
+          </ReelsProvider>
         </ImageProvider>
       </body>
     </html>
