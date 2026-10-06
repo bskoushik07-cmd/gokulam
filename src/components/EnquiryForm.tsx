@@ -19,7 +19,7 @@ export default function EnquiryForm() {
     const message = String(data.get("message") ?? "");
     const subject = encodeURIComponent(`Gokulam enquiry — ${topic} (from ${name})`);
     const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-    window.location.href = `mailto:hello@gokulam.in?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:filtercoffee@gokulamofficial.com?subject=${subject}&body=${body}`;
     setSent(true);
   };
 

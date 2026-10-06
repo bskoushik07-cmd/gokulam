@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSiteImage } from "@/context/ImageContext";
 import { ChevronDown, MapPin, ArrowRight } from "lucide-react";
 
-/** Real Gokulam wordmark from the client's brand kit. */
+/** Real Gokulam wordmark matching reference design brand plate. */
 export function LogoPlate({
   compact = false,
   tone = "dark",
@@ -16,17 +16,27 @@ export function LogoPlate({
   tone?: "dark" | "cream";
   className?: string;
 }) {
-  const lightLogo = useSiteImage("brand.logo_light", "/images/logo-r3.png");
-  const creamLogo = useSiteImage("brand.logo_cream", "/images/logo-cream-original.png");
-  const logoSrc = tone === "cream" ? creamLogo : lightLogo;
+  const lightLogo = useSiteImage("brand.logo_light", "");
+  const creamLogo = useSiteImage("brand.logo_cream", "");
+  const customLogo = tone === "cream" ? creamLogo : lightLogo;
+
+  if (customLogo) {
+    return (
+      <img
+        src={customLogo}
+        alt="Gokulam"
+        draggable={false}
+        className={className ?? (compact ? "h-8 w-auto" : "h-10 w-auto")}
+      />
+    );
+  }
 
   return (
-    <img
-      src={logoSrc}
-      alt="Gokulam"
-      draggable={false}
-      className={className ?? (compact ? "h-8 w-auto" : "h-10 w-auto")}
-    />
+    <div className="inline-flex items-center justify-center rounded-md bg-[#B36B39] px-3.5 py-1.5 shadow-xs transition-transform hover:scale-105 active:scale-95">
+      <span className="font-display text-sm sm:text-base font-bold tracking-[0.22em] text-[#FDF8F0]">
+        GOKULAM
+      </span>
+    </div>
   );
 }
 

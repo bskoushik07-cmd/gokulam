@@ -15,7 +15,7 @@ export const outlets: Outlet[] = [
     area: "Janpath",
     address: "G-7, Janpath Market, Connaught Place, New Delhi 110001",
     hours: "11:00 AM – 11:00 PM, all days",
-    phone: "+91 11 4155 2233",
+    phone: "+91 97319 99040",
     mapsUrl:
       "https://www.google.com/maps/search/?api=1&query=Gokulam+Janpath+Connaught+Place+New+Delhi",
     orderOnlineUrl: null, // wired when the delivery partner link is confirmed
@@ -30,7 +30,7 @@ export const outlets: Outlet[] = [
     area: "Sector 62",
     address: "Sector 62, Noida Electronic City",
     hours: "8:00 AM – 8:00 PM, all days",
-    phone: null,
+    phone: "+91 97319 99040",
     mapsUrl: "https://maps.app.goo.gl/aD32b2w53EhvrV2g8",
     orderOnlineUrl: null,
     status: "open",

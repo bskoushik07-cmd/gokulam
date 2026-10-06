@@ -178,18 +178,18 @@ export default function Footer() {
                 <p className="text-xs text-cream/50">Direct Contact</p>
                 <div className="mt-2 flex flex-col gap-1.5 text-xs text-cream/80">
                   <a
-                    href="mailto:hello@gokulam.in"
+                    href="mailto:filtercoffee@gokulamofficial.com"
                     className="flex items-center gap-2 hover:text-copper transition-colors"
                   >
                     <Mail className="h-3.5 w-3.5 text-copper" />
-                    <span>hello@gokulam.in</span>
+                    <span>filtercoffee@gokulamofficial.com</span>
                   </a>
                   <a
-                    href="tel:+911141552233"
+                    href="tel:+919731999040"
                     className="flex items-center gap-2 hover:text-copper transition-colors"
                   >
                     <Phone className="h-3.5 w-3.5 text-copper" />
-                    <span>+91 11 4155 2233</span>
+                    <span>+91 97319 99040</span>
                   </a>
                 </div>
               </div>

@@ -30,10 +30,10 @@ export default function ContactPage() {
                 </dt>
                 <dd className="mt-1.5 text-lg">
                   <a
-                    href="mailto:hello@gokulam.in"
+                    href="mailto:filtercoffee@gokulamofficial.com"
                     className="text-ink hover:text-copper-deep hover:underline"
                   >
-                    hello@gokulam.in
+                    filtercoffee@gokulamofficial.com
                   </a>
                 </dd>
               </div>
@@ -43,10 +43,10 @@ export default function ContactPage() {
                 </dt>
                 <dd className="mt-1.5 text-lg">
                   <a
-                    href="tel:+911141552233"
+                    href="tel:+919731999040"
                     className="text-ink hover:text-copper-deep hover:underline"
                   >
-                    +91 11 4155 2233
+                    +91 97319 99040
                   </a>
                 </dd>
               </div>

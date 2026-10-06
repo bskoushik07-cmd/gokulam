@@ -6,6 +6,7 @@ import ScrollRoute from "@/components/ScrollRoute";
 import PhilosophyTimeline from "@/components/PhilosophyTimeline";
 import StorySlideshow from "@/components/StorySlideshow";
 import { MysorePalace, IndiaGate } from "@/components/Landmarks";
+import { Leaf, Users, Sprout, MapPin, ArrowRight } from "lucide-react";
 import {
   Section,
   Eyebrow,
@@ -71,57 +72,77 @@ export default function HomeJourney() {
       <ScrollRoute containerRef={journeyRef} />
 
       <div className="relative z-10">
-        {/* ============ 01 — HERO ============ */}
-        <section className="relative overflow-hidden px-4 pt-6 pb-16 sm:px-6 sm:pt-10 sm:pb-24 lg:pt-12 lg:pb-28">
-          {/* Mysore Palace line-art — journey start, like the client reference */}
-          <MysorePalace className="pointer-events-none absolute left-4 sm:left-10 top-0 w-[32rem] opacity-[0.25] sm:w-[50rem] sm:opacity-[0.32] lg:w-[58rem]" />
+        {/* ============ 01 — HERO (HERITAGE EDITORIAL DESIGN) ============ */}
+        <section className="relative overflow-hidden bg-cream min-h-[82vh] lg:min-h-[88vh] flex items-center border-b border-copper/15">
+          {/* Background Heritage Architectural Panorama & Botanical Artwork */}
+          <div className="absolute inset-0 z-0 pointer-events-none select-none">
+            <img
+              src="/images/hero-heritage-palace.jpg"
+              alt="South Indian Heritage Palace Architecture & Botanical Art"
+              className="w-full h-full object-cover object-right lg:object-[82%_center] opacity-90 mix-blend-multiply"
+            />
+            {/* Subtle soft gradient fade on the left to make typography pop crystal-clear */}
+            <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/80 to-transparent w-full md:w-[72%] lg:w-[58%]" />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-cream via-cream/40 to-transparent" />
+          </div>
 
-          <div className="relative z-10 mx-auto grid max-w-7xl items-start gap-10 lg:grid-cols-2 lg:gap-14">
-            <Reveal>
-              <h1 className="font-display text-5xl font-semibold leading-[1.04] text-ink sm:text-6xl lg:text-7xl xl:text-[5rem]">
-                The soul of South India,{" "}
-                <span className="italic text-copper-deep">on your plate.</span>
-              </h1>
+          <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24 w-full">
+            <div className="max-w-2xl lg:max-w-2xl">
+              <Reveal>
+                {/* H1 Heading */}
+                <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[5.3rem] font-bold text-ink leading-[1.06] tracking-tight">
+                  The soul of<br />
+                  South India, <span className="italic font-normal text-copper-deep">on</span><br />
+                  <span className="italic font-normal text-copper-deep">your plate.</span>
+                </h1>
 
-              <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg lg:text-xl max-w-xl">
-                Authentic flavours, timeless recipes and the warmth of a meal made with heart. Freshly ground batters, slow-brewed filter coffee, and classics crisped to order.
-              </p>
+                {/* Sub-paragraph */}
+                <p className="mt-6 text-base sm:text-lg leading-relaxed text-ink-soft font-body max-w-xl">
+                  Authentic flavours from our roots, crafted with warmth and tradition. From crisp dosas to timeless South Indian meals, every bite at Gokulam brings people closer around the table.
+                </p>
 
-              <div className="mt-8 flex flex-wrap gap-4">
-                <CTAButton href="/menu">Explore Our Menu</CTAButton>
-                <CTAButton href="/outlets" variant="secondary">
-                  Find an Outlet
-                </CTAButton>
-              </div>
+                {/* Action Buttons */}
+                <div className="mt-8 sm:mt-10 flex flex-wrap items-center gap-4">
+                  <Link
+                    href="/menu"
+                    className="inline-flex items-center gap-2 rounded-full bg-forest px-8 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-cream shadow-md transition-all hover:bg-forest-deep hover:shadow-xl active:scale-95"
+                  >
+                    <span>Explore Our Menu</span>
+                    <span className="text-base leading-none">→</span>
+                  </Link>
 
-              {/* Highlights to anchor hero and fill vertical proportion */}
-              <div className="mt-10 flex flex-wrap items-center gap-5 border-t border-sand/70 pt-6 text-xs text-ink-soft sm:gap-7">
-                <div className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-copper-deep" />
-                  <span className="font-medium text-ink">Ground Fresh Daily</span>
+                  <Link
+                    href="/outlets"
+                    className="inline-flex items-center gap-2 rounded-full border border-forest bg-cream/60 backdrop-blur-xs px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-forest transition-all hover:bg-forest/10 active:scale-95"
+                  >
+                    <span>Find an Outlet</span>
+                    <MapPin className="h-4 w-4 text-forest" />
+                  </Link>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-copper-deep" />
-                  <span className="font-medium text-ink">Davara Filter Coffee</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-copper-deep" />
-                  <span className="font-medium text-ink">Janpath · Noida</span>
-                </div>
-              </div>
-            </Reveal>
 
-            <Reveal delay={0.15} className="w-full lg:pt-1.5">
-              <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
-                <FoodImage
-                  src={heroImage}
-                  alt="Crispy golden dosa served on a banana leaf with sambar and chutneys"
-                  priority
-                  className="aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] w-full shadow-2xl rounded-3xl"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
-            </Reveal>
+                {/* Trust / Feature Badges Bar */}
+                <div className="mt-12 sm:mt-14 flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-ink-soft font-body font-medium">
+                  <div className="flex items-center gap-2">
+                    <Leaf className="h-4 w-4 text-emerald-800 shrink-0" />
+                    <span>Authentic Flavours</span>
+                  </div>
+                  
+                  <span className="hidden sm:inline text-sand/90 select-none">|</span>
+                  
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-copper-deep shrink-0" />
+                    <span>Family Friendly</span>
+                  </div>
+                  
+                  <span className="hidden sm:inline text-sand/90 select-none">|</span>
+                  
+                  <div className="flex items-center gap-2">
+                    <Sprout className="h-4 w-4 text-emerald-800 shrink-0" />
+                    <span>Always Fresh</span>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
           </div>
         </section>
 
