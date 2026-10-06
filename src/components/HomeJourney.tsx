@@ -36,7 +36,7 @@ import { useSiteImage } from "@/context/ImageContext";
 export default function HomeJourney() {
   const journeyRef = useRef<HTMLDivElement>(null);
 
-  const heroImage = useSiteImage("home.hero", "/images/DSC05117.jpg");
+  const heroBgImage = useSiteImage("home.hero_bg", useSiteImage("home.hero", "/images/hero-heritage-palace.jpg"));
   const coffeePourImage = useSiteImage("home.coffee_pour", "/images/coffee-pour.webp");
 
   const traditionBadge = useSiteImage("badge.tradition", "/images/tradition-badge.png");
@@ -77,7 +77,7 @@ export default function HomeJourney() {
           {/* Background Heritage Architectural Panorama & Botanical Artwork */}
           <div className="absolute inset-0 z-0 pointer-events-none select-none">
             <img
-              src="/images/hero-heritage-palace.jpg"
+              src={heroBgImage}
               alt="South Indian Heritage Palace Architecture & Botanical Art"
               className="w-full h-full object-cover object-right lg:object-[82%_center] opacity-90 mix-blend-multiply"
             />

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { outlets } from "@/content";
 import { LogoPlate } from "./Navbar";
 import { ArrowUp, MapPin, Phone, Mail, Clock, Sparkles } from "lucide-react";
+import { useSiteImage } from "@/context/ImageContext";
 
 const SOCIALS = [
   {
@@ -38,6 +39,11 @@ const SOCIALS = [
 ];
 
 export default function Footer() {
+  const footerPattern = useSiteImage(
+    "brand.footer_pattern",
+    "/images/footer-pattern-ribbon-clean.png"
+  );
+
   const scrollToTop = () => {
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -45,18 +51,26 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative z-20 w-full border-t-2 border-copper/40 bg-bark text-cream shadow-2xl">
-      {/* Subtle top ambient glow */}
-      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-copper to-transparent opacity-60" />
+    <footer className="relative z-20 w-full bg-[#2A211B] text-cream shadow-2xl">
+      {/* Traditional South Indian Pattern Ribbon across the top */}
+      <div className="relative w-full overflow-hidden select-none pointer-events-none -mt-px">
+        <div
+          className="h-10 sm:h-12 md:h-14 lg:h-16 w-full bg-repeat-x bg-contain bg-bottom"
+          style={{
+            backgroundImage: `url('${footerPattern}')`,
+            backgroundSize: "auto 100%",
+          }}
+        />
+      </div>
 
       {/* Main Footer Content */}
-      <div className="mx-auto max-w-7xl px-6 py-14 sm:px-8 sm:py-20 lg:px-10">
+      <div className="mx-auto max-w-7xl px-6 py-12 sm:px-8 sm:py-16 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[1.8fr_1fr_1fr_1.3fr] lg:gap-14">
           
           {/* Column 1: Brand & Philosophy */}
           <div className="space-y-6">
             <Link href="/" className="inline-block">
-              <LogoPlate tone="cream" className="h-14 sm:h-16 w-auto object-contain" />
+              <LogoPlate tone="cream" className="h-12 sm:h-14 w-auto object-contain" />
             </Link>
             
             <p className="max-w-sm text-sm leading-relaxed text-cream/70 font-body">

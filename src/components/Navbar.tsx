@@ -17,13 +17,23 @@ export function LogoPlate({
   className?: string;
 }) {
   const lightLogo = useSiteImage("brand.logo_light", "");
-  const creamLogo = useSiteImage("brand.logo_cream", "");
-  const customLogo = tone === "cream" ? creamLogo : lightLogo;
+  const creamLogo = useSiteImage("brand.logo_cream", "/images/logo-cream-original.png");
 
-  if (customLogo) {
+  if (tone === "cream") {
     return (
       <img
-        src={customLogo}
+        src={creamLogo}
+        alt="Gokulam"
+        draggable={false}
+        className={className ?? (compact ? "h-10 w-auto" : "h-12 sm:h-14 w-auto object-contain")}
+      />
+    );
+  }
+
+  if (lightLogo) {
+    return (
+      <img
+        src={lightLogo}
         alt="Gokulam"
         draggable={false}
         className={className ?? (compact ? "h-8 w-auto" : "h-10 w-auto")}
